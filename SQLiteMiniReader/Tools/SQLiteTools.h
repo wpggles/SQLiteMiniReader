@@ -26,7 +26,7 @@
 /* Define NULL pointer value */
 #ifndef NULL
 #ifdef __cplusplus
-#define NULL    0
+#define NULL     0
 #else  /* __cplusplus */
 #define NULL    ((void *)0)
 #endif  /* __cplusplus */
@@ -44,8 +44,28 @@
 #define UINT unsigned int
 #endif
 
-#ifndef ULONGLONG
-#define ULONGLONG unsigned long long
+#ifndef ULONG
+#ifdef _MSC_VER
+#if _MSC_VER <= 1500
+#define ULONG unsigned _int64
+#else
+#define ULONG unsigned long long
+#endif // _MSC_VER
+#else
+#define ULONG unsigned long long
+#endif
+#endif
+
+#ifndef LONG
+#ifdef _MSC_VER
+#if _MSC_VER <= 1500
+#define LONG _int64
+#else
+#define LONG long long
+#endif // _MSC_VER
+#else
+#define LONG long long
+#endif
 #endif
 
 #ifndef BOOL
@@ -70,11 +90,11 @@ private:
 	union ByteNumber
 	{
 		//存储字节
-		BYTE byteValue[sizeof(long long)];
+		BYTE byteValue[sizeof(ULONG)];
 		//8字节对应的浮点型
 		double doubleValue;
 		//8字节对应的长整型
-		ULONGLONG longValue;
+		ULONG longValue;
 		//4字节对应的整型
 		UINT intValue;
 		//2字节对应的短整型
@@ -88,7 +108,7 @@ public:
 	*       useBytesCount [OUT] -> 返回变长数字所使用的字节数。
 	* 返回：转换后的长整型。
 	************************************************************************/
-	static ULONGLONG VolatileLong(IN const BYTE * bytes, OUT int * useBytesCount);
+	static ULONG VolatileLong(IN const BYTE * bytes, OUT int * useBytesCount);
 
 	/************************************************************************
 	* 功能：将大端模式的数字转换为小端数字。
@@ -97,7 +117,7 @@ public:
 	*       len   [IN] -> 目标数字类型大小。
 	* 返回：转换后的数字。
 	************************************************************************/
-	static ULONGLONG BigEndianNumber(IN const BYTE * bytes, IN UINT size);
+	static ULONG BigEndianNumber(IN const BYTE * bytes, IN UINT size);
 
 	/************************************************************************
 	* 功能：将大端模式的浮点型转换为小端浮点型。
@@ -113,7 +133,7 @@ public:
 	*       bytes [IN] -> 要转换的字节数组。
 	* 返回：转换后的长整型。
 	************************************************************************/
-	static long long BigEndianLong(IN const BYTE * bytes);
+	static LONG BigEndianLong(IN const BYTE * bytes);
 
 	/************************************************************************
 	* 功能：将大端模式整型转换为小端整型。

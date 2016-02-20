@@ -107,7 +107,7 @@ BOOL SQLiteRecord::GetFeildProperty(IN UINT index, IN int properties)
 * 参数：无。
 * 返回：RowID。
 ************************************************************************/
-ULONGLONG SQLiteRecord::GetRowID()
+ULONG SQLiteRecord::GetRowID()
 {
     return m_TmpDataCell ? m_TmpDataCell->GetRowID() : 0;
 }
@@ -130,17 +130,17 @@ BOOL SQLiteRecord::GetBoolean(IN int index)
 *       index [IN] -> 指定的字段索引。
 * 返回：转换后的整数。
 ************************************************************************/
-long long SQLiteRecord::GetInteger(IN int index)
+LONG SQLiteRecord::GetInteger(IN int index)
 {
-    
+
     if (m_TmpDataCell)
     {
-        long long result = m_TmpDataCell->GetInteger(index);
+        LONG result = m_TmpDataCell->GetInteger(index);
         //因为SQLite为了节省空间，对于主键是自增的字段默认采用的是rowid
         if (!result)
         {
-            if (m_SQLiteTable->GetFeildProperty(index, SQLiteFeildProperty::SFP_PRIMARY_KEY) || 
-                m_SQLiteTable->GetFeildProperty(index, SQLiteFeildProperty::SFP_AUTOINCREMENT))
+            if (m_SQLiteTable->GetFeildProperty(index, SFP_PRIMARY_KEY) ||
+                m_SQLiteTable->GetFeildProperty(index, SFP_AUTOINCREMENT))
             {
                 return m_TmpDataCell->GetRowID();
             }

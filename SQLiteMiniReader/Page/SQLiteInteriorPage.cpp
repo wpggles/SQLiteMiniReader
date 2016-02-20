@@ -44,7 +44,7 @@ UINT SQLiteInteriorPage::GetPageIndex(IN int index)
 *       index [IN] -> 当前内部页中的叶子的起始索引值。
 * 返回：当前内部页指向的叶子页的起始索引值。
 ************************************************************************/
-ULONGLONG SQLiteInteriorPage::GetCompareIndex(IN int index)
+ULONG SQLiteInteriorPage::GetCompareIndex(IN int index)
 {
     //如果不在有效范围内直接返回0
     if (index < 0 || index >= m_CellsCount)

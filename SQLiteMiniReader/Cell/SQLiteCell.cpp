@@ -26,9 +26,9 @@ SQLiteCell::SQLiteCell(IN const BYTE * bytes, IN const BYTE * rawData, IN const 
 {
     const BYTE * dataBytes = bytes;
     int offset = 0;
-    
-    int useBytesCount;
 
+    int useBytesCount;
+    int i;
     //先取出标记使用的字节数
     m_UseBytes = SQLiteTools::VolatileLong(dataBytes + offset, &useBytesCount);
     offset += useBytesCount;
@@ -38,7 +38,7 @@ SQLiteCell::SQLiteCell(IN const BYTE * bytes, IN const BYTE * rawData, IN const 
 
     //计算总字节数
     m_UseBytes += offset;
-    
+
     //如果总字节数超过了当前单元在此页中的大小，则说明使用溢出页
     if (m_UseBytes > cellSizeInCurrentPage)
     {
@@ -50,7 +50,7 @@ SQLiteCell::SQLiteCell(IN const BYTE * bytes, IN const BYTE * rawData, IN const 
 
         //下一个溢出页的页号
         UINT overflowPageIndex = SQLiteTools::BigEndianInt(bytes + tmpOffset);
-        
+
         //循环读取溢出页数据
         while (overflowPageIndex)
         {
@@ -78,14 +78,16 @@ SQLiteCell::SQLiteCell(IN const BYTE * bytes, IN const BYTE * rawData, IN const 
         }
     }
 
-    m_Types = new ULONGLONG[(int)m_ColumnCount];
+    m_Types = new ULONG[(int)m_ColumnCount];
     m_Data = new BYTE *[(int)m_ColumnCount];
-    for (int i = 0; i < (int)m_ColumnCount; i++)
+
+    for (i = 0; i < (int)m_ColumnCount; i++)
     {
         m_Types[i] = SQLiteTools::VolatileLong(dataBytes + offset, &useBytesCount);
         offset += useBytesCount;
     }
-    for (int i = 0; i < (int)m_ColumnCount; i++)
+
+    for (i = 0; i < (int)m_ColumnCount; i++)
     {
         switch (m_Types[i])
         {
@@ -135,7 +137,15 @@ SQLiteCell::SQLiteCell(IN const BYTE * bytes, IN const BYTE * rawData, IN const 
     }
     if (m_UseBytes > cellSizeInCurrentPage)
     {
+#ifdef _MSC_VER
+#if _MSC_VER <= 1500
+        delete[] (void *)dataBytes;
+#else
         delete[] dataBytes;
+#endif // _MSC_VER
+#else
+        delete[] dataBytes;
+#endif
     }
 }
 
@@ -146,7 +156,7 @@ SQLiteCell::SQLiteCell(IN const BYTE * bytes, IN const BYTE * rawData, IN const 
 ************************************************************************/
 SQLiteCell::~SQLiteCell()
 {
-    for (int i = 0; i < m_ColumnCount; ++i)
+    for (UINT i = 0; i < m_ColumnCount; ++i)
     {
         if (m_Data[i])
         {

@@ -54,9 +54,9 @@ void SQLiteTable::FormatSql(IN_OUT char * sqlString)
             lastIsSpace = FALSE;
 
             //一下这个if结构是对上面这个对段落注释的精简写法
-            if (*orgPos != ',' && (!lastIsSplite || !currentIsSplite) && 
-                ((!lastIsSplite && currentIsSplite && *orgPos == '(') || 
-                (lastIsSplite && !currentIsSplite && *(curPos - 1) == ')') || 
+            if (*orgPos != ',' && (!lastIsSplite || !currentIsSplite) &&
+                ((!lastIsSplite && currentIsSplite && *orgPos == '(') ||
+                (lastIsSplite && !currentIsSplite && *(curPos - 1) == ')') ||
                 (!lastIsSplite && !currentIsSplite)))
             {
                 *curPos = ' ';
@@ -65,7 +65,7 @@ void SQLiteTable::FormatSql(IN_OUT char * sqlString)
         }
         //记录当前是否是分隔符来作为下一次判断上一个是否是分隔符的依据
         lastIsSplite = currentIsSplite;
-        
+
         //执行到这里只需要进行赋值
         *curPos = *orgPos;
         //判断是否出现单引号
@@ -81,7 +81,7 @@ void SQLiteTable::FormatSql(IN_OUT char * sqlString)
         //指针指向下一个位置
         orgPos++;
         curPos++;
-        
+
     }
     //再格式化后的字符串末尾增加字符串结束符
     *curPos = 0;
@@ -127,7 +127,7 @@ void SQLiteTable::InitSqlFeild(IN int index, IN const char * feildSql)
         tmpPosEndPtr++;
         *tmpPosEndPtr = 0;
     }
-    
+
     len = strlen(tmpPosStartPtr) + 1;
     m_Fields[index].TypeName = new char[len];
     memcpy(m_Fields[index].TypeName, tmpPosStartPtr, len);
@@ -198,7 +198,7 @@ BOOL SQLiteTable::HandleForeignKeySetence(IN const char * setence)
     {
         return FALSE;
     }
-    
+
     feildName += 1;
     feildNameEnd -= 1;
 
@@ -528,25 +528,25 @@ SQLiteDataType SQLiteTable::GetSimilarType(IN UINT index)
 {
     if (strstr(m_Fields[index].TypeName, "bool") != NULL)
     {
-        return SQLiteDataType::SDT_BOOLEAN;
+        return SDT_BOOLEAN;
     }
     else if (strstr(m_Fields[index].TypeName, "int") != NULL)
     {
-        return SQLiteDataType::SDT_INTEGER;
+        return SDT_INTEGER;
     }
     else if (strstr(m_Fields[index].TypeName, "real") != NULL || strstr(m_Fields[index].TypeName, "double") != NULL || strstr(m_Fields[index].TypeName, "float") != NULL || strstr(m_Fields[index].TypeName, "decimal") != NULL)
     {
-        return SQLiteDataType::SDT_REAL;
+        return SDT_REAL;
     }
     else if (strstr(m_Fields[index].TypeName, "char") != NULL || !strncmp(m_Fields[index].TypeName, "text", 4) || !strncmp(m_Fields[index].TypeName, "clob", 4))
     {
-        return SQLiteDataType::SDT_TEXT;
+        return SDT_TEXT;
     }
     else if (!strcmp(m_Fields[index].TypeName, "blob"))
     {
-        return SQLiteDataType::SDT_BLOB;
+        return SDT_BLOB;
     }
-    return SQLiteDataType::SDT_UNKNOWN;
+    return SDT_UNKNOWN;
 }
 
 /************************************************************************
@@ -559,11 +559,11 @@ SQLiteDataType SQLiteTable::GetSimilarType(IN UINT index)
 ************************************************************************/
 BOOL SQLiteTable::GetFeildProperty(IN UINT index, IN int properties)
 {
-    return !((properties == SFP_NOP && (m_Fields[index].NotNull || m_Fields[index].IsPrimaryKey || m_Fields[index].IsAutoincrementKey || m_Fields[index].IsForeignKey)) || 
-        (SFP_PRIMARY_KEY & properties && !m_Fields[index].IsPrimaryKey) || 
-        (SFP_AUTOINCREMENT & properties && !m_Fields[index].IsAutoincrementKey) || 
-        (SFP_NOT_NULL & properties && !m_Fields[index].NotNull) || 
-        (SFP_FOREIGN_KEY & properties && !m_Fields[index].IsForeignKey) || 
+    return !((properties == SFP_NOP && (m_Fields[index].NotNull || m_Fields[index].IsPrimaryKey || m_Fields[index].IsAutoincrementKey || m_Fields[index].IsForeignKey)) ||
+        (SFP_PRIMARY_KEY & properties && !m_Fields[index].IsPrimaryKey) ||
+        (SFP_AUTOINCREMENT & properties && !m_Fields[index].IsAutoincrementKey) ||
+        (SFP_NOT_NULL & properties && !m_Fields[index].NotNull) ||
+        (SFP_FOREIGN_KEY & properties && !m_Fields[index].IsForeignKey) ||
         (SFP_UNIQUE_KEY & properties && !m_Fields[index].IsUniqueKey)
         );
 }

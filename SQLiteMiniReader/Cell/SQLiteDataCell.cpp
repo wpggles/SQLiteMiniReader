@@ -12,7 +12,7 @@
 * 参数：无。
 * 返回：RowID。
 ************************************************************************/
-ULONGLONG SQLiteDataCell::GetRowID()
+ULONG SQLiteDataCell::GetRowID()
 {
     return m_RowID;
 }
@@ -22,7 +22,7 @@ ULONGLONG SQLiteDataCell::GetRowID()
 * 参数：无。
 * 返回：字段列数。
 ************************************************************************/
-ULONGLONG SQLiteDataCell::GetColumnCount()
+ULONG SQLiteDataCell::GetColumnCount()
 {
     return m_ColumnCount;
 }
@@ -95,7 +95,7 @@ BOOL SQLiteDataCell::GetBoolean(IN int index)
 *       index [IN] -> 指定的字段索引。
 * 返回：转换后的整数。
 ************************************************************************/
-long long SQLiteDataCell::GetInteger(IN int index)
+LONG SQLiteDataCell::GetInteger(IN int index)
 {
     if (!IS_VALOD_INDEX(index) || IS_DBNULL(index))
     {

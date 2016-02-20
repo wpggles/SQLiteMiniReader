@@ -14,7 +14,7 @@
 *       useBytesCount [OUT] -> 返回变长数字所使用的字节数。
 * 返回：转换后的长整型。
 ************************************************************************/
-ULONGLONG SQLiteTools::VolatileLong(IN const BYTE * bytes, OUT int * useBytesCount)
+ULONG SQLiteTools::VolatileLong(IN const BYTE * bytes, OUT int * useBytesCount)
 {
     ByteNumber value;
     //清空存储的缓存
@@ -45,7 +45,7 @@ ULONGLONG SQLiteTools::VolatileLong(IN const BYTE * bytes, OUT int * useBytesCou
         }
         //补齐前一位
         //对于第9字节，7位将全部合并到前一个数字，自己不占字节，所以这里只需要补齐前一个字节即可
-        value.byteValue[valueIndex - 1] |= bytes[index] << (sizeof(ULONGLONG) - valueIndex);
+        value.byteValue[valueIndex - 1] |= bytes[index] << (sizeof(ULONG) - valueIndex);
     }
 
     return value.longValue;
@@ -58,7 +58,7 @@ ULONGLONG SQLiteTools::VolatileLong(IN const BYTE * bytes, OUT int * useBytesCou
 *       len   [IN] -> 目标数字类型大小。
 * 返回：转换后的数字。
 ************************************************************************/
-ULONGLONG SQLiteTools::BigEndianNumber(IN const BYTE * bytes, IN UINT size)
+ULONG SQLiteTools::BigEndianNumber(IN const BYTE * bytes, IN UINT size)
 {
     ByteNumber value;
     value.longValue = 0;
@@ -94,9 +94,9 @@ double SQLiteTools::BigEndianDouble(IN const BYTE * bytes)
 *       bytes [IN] -> 要转换的字节数组。
 * 返回：转换后的长整型。
 ************************************************************************/
-long long SQLiteTools::BigEndianLong(IN const BYTE * bytes)
+LONG SQLiteTools::BigEndianLong(IN const BYTE * bytes)
 {
-    return (long long)BigEndianNumber(bytes, sizeof(ULONGLONG));
+    return (LONG)BigEndianNumber(bytes, sizeof(ULONG));
 }
 
 /************************************************************************

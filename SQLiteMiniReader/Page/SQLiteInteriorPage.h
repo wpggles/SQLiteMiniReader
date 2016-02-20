@@ -20,7 +20,7 @@ private:
     * 返回：无。
     * 备注：给定的数据必须完整，超过一个Page的数据会自动忽略。
     ************************************************************************/
-    SQLiteInteriorPage() : SQLitePage(nullptr, 0, 0){};
+    SQLiteInteriorPage() : SQLitePage(NULL, 0, 0){};
 
 public:
     /************************************************************************
@@ -51,7 +51,7 @@ public:
     *       index [IN] -> 当前内部页中的叶子的起始索引值。
     * 返回：当前内部页指向的叶子页的起始索引值。
     ************************************************************************/
-    ULONGLONG GetCompareIndex(IN int index);
+    ULONG GetCompareIndex(IN int index);
 };
 
 #endif

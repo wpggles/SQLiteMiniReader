@@ -40,7 +40,7 @@ UINT SQLiteTableCell::GetText(IN int index, OUT char * & bufferPtr)
 *       index [IN] -> 指定的字段索引。
 * 返回：转换后的整数。
 ************************************************************************/
-long long SQLiteTableCell::GetInteger(IN int index)
+LONG SQLiteTableCell::GetInteger(IN int index)
 {
     if (!IS_VALOD_INDEX(index) || IS_DBNULL(index))
     {
@@ -66,7 +66,7 @@ long long SQLiteTableCell::GetInteger(IN int index)
 * 参数：无。
 * 返回：当前Table的ID。
 ************************************************************************/
-ULONGLONG SQLiteTableCell::GetTableID()
+ULONG SQLiteTableCell::GetTableID()
 {
     return m_RowID;
 }
@@ -121,7 +121,7 @@ UINT SQLiteTableCell::GetRelatedObjectName(OUT char * & bufferPtr)
 * 参数：无。
 * 返回：当前Table对应的数据的根页索引。
 ************************************************************************/
-ULONGLONG SQLiteTableCell::GetRootPageIndex()
+ULONG SQLiteTableCell::GetRootPageIndex()
 {
     return GetInteger(3);
 }

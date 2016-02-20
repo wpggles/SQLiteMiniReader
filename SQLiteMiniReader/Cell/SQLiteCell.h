@@ -22,7 +22,7 @@
 #define BLOB_LENGHT(x) (((UINT)(x) - 12) / 2)
 
 //判断列索引是否有效
-#define IS_VALOD_INDEX(x) ((x) >= 0 && (x) < m_ColumnCount)
+#define IS_VALOD_INDEX(x) ((x) >= 0 && (x) < (int)m_ColumnCount)
 
 //判断类型是为为DBNULL
 #define IS_DBNULL(x) (m_Types[x] == NULL)
@@ -66,13 +66,13 @@ class SQLiteCell
 {
 protected:
     //使用字节数
-    ULONGLONG   m_UseBytes;
+    ULONG   m_UseBytes;
     //在当前表中的ID
-    ULONGLONG   m_RowID;
+    ULONG   m_RowID;
     //列数量
-    ULONGLONG   m_ColumnCount;
+    ULONG   m_ColumnCount;
     //类型列表
-    ULONGLONG * m_Types;
+    ULONG * m_Types;
     //数据列表
     BYTE **     m_Data;
 
