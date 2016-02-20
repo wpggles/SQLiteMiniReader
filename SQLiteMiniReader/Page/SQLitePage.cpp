@@ -43,7 +43,7 @@ SQLitePage::SQLitePage(IN const BYTE * bytes, IN USHORT pageSize, IN USHORT page
     //如果是内部页
     if (GetPageType() == SPT_InteriorPage)
     {
-        //因为左右侧子叶不记在单原页数量之内
+        //因为最右侧子叶不记在单原页数量之内
         m_CellsCount += 1;
     }
 }
