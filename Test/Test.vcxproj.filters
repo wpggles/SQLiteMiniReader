@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="SQLiteMiniReader">
+      <UniqueIdentifier>{932ebfd8-65c1-4b18-8612-b2eb7f68da5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SQLiteMiniReader\Cell">
+      <UniqueIdentifier>{d9cde2f1-7e40-4733-8914-baad269f4c34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SQLiteMiniReader\FileHeader">
+      <UniqueIdentifier>{7adcda30-dfe5-4b19-a659-5f0a5a3462d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SQLiteMiniReader\Page">
+      <UniqueIdentifier>{b76fc096-e946-4d0b-9dd9-b3f54f2888b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SQLiteMiniReader\Tools">
+      <UniqueIdentifier>{b47fbc58-05a9-4981-8665-fde2ab7bf1f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SQLiteMiniReader\Traverse">
+      <UniqueIdentifier>{ef30cbbe-45e8-4afa-9b64-c2be6a216abb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SQLiteMiniReader\SQLiteMiniReader.cpp">
+      <Filter>SQLiteMiniReader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SQLiteMiniReader\Cell\SQLiteDataCell.cpp">
+      <Filter>SQLiteMiniReader\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SQLiteMiniReader\Cell\SQLiteTableCell.cpp">
+      <Filter>SQLiteMiniReader\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SQLiteMiniReader\Cell\SQLiteCell.cpp">
+      <Filter>SQLiteMiniReader\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SQLiteMiniReader\FileHeader\SQLiteFileHeader.cpp">
+      <Filter>SQLiteMiniReader\FileHeader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SQLiteMiniReader\Page\SQLiteInteriorPage.cpp">
+      <Filter>SQLiteMiniReader\Page</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SQLiteMiniReader\Page\SQLiteLeafPage.cpp">
+      <Filter>SQLiteMiniReader\Page</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SQLiteMiniReader\Page\SQLitePage.cpp">
+      <Filter>SQLiteMiniReader\Page</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SQLiteMiniReader\Tools\SQLiteTools.cpp">
+      <Filter>SQLiteMiniReader\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SQLiteMiniReader\Traverse\SQLiteRecord.cpp">
+      <Filter>SQLiteMiniReader\Traverse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SQLiteMiniReader\Traverse\SQLiteTable.cpp">
+      <Filter>SQLiteMiniReader\Traverse</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\SQLiteMiniReader\SQLiteMiniReader.h">
+      <Filter>SQLiteMiniReader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SQLiteMiniReader\Cell\SQLiteCell.h">
+      <Filter>SQLiteMiniReader\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SQLiteMiniReader\Cell\SQLiteDataCell.h">
+      <Filter>SQLiteMiniReader\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SQLiteMiniReader\Cell\SQLiteTableCell.h">
+      <Filter>SQLiteMiniReader\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SQLiteMiniReader\FileHeader\SQLiteFileHeader.h">
+      <Filter>SQLiteMiniReader\FileHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SQLiteMiniReader\Page\SQLiteInteriorPage.h">
+      <Filter>SQLiteMiniReader\Page</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SQLiteMiniReader\Page\SQLiteLeafPage.h">
+      <Filter>SQLiteMiniReader\Page</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SQLiteMiniReader\Page\SQLitePage.h">
+      <Filter>SQLiteMiniReader\Page</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SQLiteMiniReader\Tools\SQLiteTools.h">
+      <Filter>SQLiteMiniReader\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SQLiteMiniReader\Traverse\SQLiteRecord.h">
+      <Filter>SQLiteMiniReader\Traverse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SQLiteMiniReader\Traverse\SQLiteTable.h">
+      <Filter>SQLiteMiniReader\Traverse</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
