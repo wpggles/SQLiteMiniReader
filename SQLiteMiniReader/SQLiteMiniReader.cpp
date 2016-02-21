@@ -187,8 +187,11 @@ BOOL SQLiteMiniReader::QueryRecord(IN const char * tableName, IN HandleRecordCal
     }
     //创建用于传参的对象
     SQLiteRecord sqliteHandleCell(queryTableCell);
-    //遍历对象下的记录
-    TraverseCell((UINT)queryTableCell->GetRootPageIndex(), handleRecordFunc, &sqliteHandleCell, pVoid);
+	if (!sqliteHandleCell.m_SQLiteTable->HasNoTypeFeild())
+	{
+		//遍历对象下的记录
+		TraverseCell((UINT)queryTableCell->GetRootPageIndex(), handleRecordFunc, &sqliteHandleCell, pVoid);
+	}
     //删除表对象
     delete queryTableCell;
     return TRUE;
@@ -222,7 +225,10 @@ BOOL SQLiteMiniReader::TraverseTable(IN UINT pageIndex, IN HandleTableCallback h
 			if (tableCell->GetTableType() == STT_Table)
 			{
 				SQLiteTable * table = new SQLiteTable(tableCell);
-				continueTravers = handleTableFunc(table, pVoid);
+				if (!table->HasNoTypeFeild())
+				{
+					continueTravers = handleTableFunc(table, pVoid);
+				}
 				delete table;
 			}
 			delete tableCell;

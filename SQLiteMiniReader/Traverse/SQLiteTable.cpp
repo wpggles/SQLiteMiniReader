@@ -93,25 +93,26 @@ void SQLiteTable::FormatSql(IN_OUT char * sqlString)
 * 参数：
 *       index    [IN] -> 指定初始化字段属性的索引。
 *       feildSql [IN] -> 用于初始化的SQL语句片段。
-* 返回：无。
+* 返回：初始化字段成功返回TRUE，失败（无类型字段）返回FALSE。
 * 备注：此操必须在成员变量m_Fields已经申请空间的情况下。
 ************************************************************************/
-void SQLiteTable::InitSqlFeild(IN int index, IN const char * feildSql)
+BOOL SQLiteTable::InitSqlFeild(IN int index, IN const char * feildSql)
 {
-    int len = strlen(feildSql) + 1;
-    char * sql = new char[len];
-    memcpy(sql, feildSql, len);
+    int feildLen = strlen(feildSql) + 1;
+    char * sql = new char[feildLen];
+    memcpy(sql, feildSql, feildLen);
     char * tmpPosStartPtr = sql;
     char * tmpPosEndPtr = *tmpPosStartPtr == '\'' ? strchr(tmpPosStartPtr + 1, '\'') + 1 : strchr(tmpPosStartPtr, ' ');
 	if (!tmpPosEndPtr)
 	{
-		tmpPosEndPtr = sql + len;
+		delete[] sql;
+		//tmpPosEndPtr = sql + feildLen;
+		return FALSE;
 	}
     *tmpPosEndPtr = 0;
-    len = strlen(tmpPosStartPtr) + 1;
+    int len = strlen(tmpPosStartPtr) + 1;
     m_Fields[index].FieldName = new char[len];
     memcpy(m_Fields[index].FieldName, tmpPosStartPtr, len);
-
     tmpPosStartPtr = tmpPosEndPtr + 1;
     tmpPosEndPtr = strchr(tmpPosStartPtr, ')');
     if (tmpPosEndPtr == NULL)
@@ -137,6 +138,7 @@ void SQLiteTable::InitSqlFeild(IN int index, IN const char * feildSql)
     m_Fields[index].IsPrimaryKey = IS_PRIMARY_KEY_FIELD(feildSql);
     m_Fields[index].IsAutoincrementKey = IS_AUTOINCREMENT_FIELD(feildSql);
     m_Fields[index].IsUniqueKey = IS_UNIQUE_FIELD(feildSql);
+	return TRUE;
 }
 
 /************************************************************************
@@ -259,6 +261,17 @@ BOOL SQLiteTable::HandleUniqueKeySetence(IN const char * setence)
 }
 
 /************************************************************************
+* 功能：判断是否有无类型的字段。
+* 参数：无。
+* 返回：有无类型的字段返回TRUE，否则返回FALSE。
+* 注意：类中碰到无类型字段会终止SQL处理，所以如果再读取字段可能不完整。
+************************************************************************/
+BOOL SQLiteTable::HasNoTypeFeild()
+{
+	return m_HasNoTypeFeild;
+}
+
+/************************************************************************
 * 功能：构造方法，初始化类。
 * 参数：
 *       tableCell [IN] -> 指定表的单元。
@@ -270,6 +283,7 @@ SQLiteTable::SQLiteTable(IN SQLiteTableCell * tableCell)
 	char * createSql = NULL;
     m_FieldCount = 0;
     m_Fields = NULL;
+	m_HasNoTypeFeild = FALSE;
 	tableCell->GetObjectName(m_TableName);
 	tableCell->GetCreateSQL(createSql);
 
@@ -407,7 +421,12 @@ SQLiteTable::SQLiteTable(IN SQLiteTableCell * tableCell)
             //如果不是外键声明语句也不是联合主键声明语句，说明是字段声明语句
             else
             {
-                InitSqlFeild(feildsIndex++, tmpSetenceStart);
+				//如果是无类型的字段，则直接丢弃此条语句，释放掉之前申请的空间
+				if (!InitSqlFeild(feildsIndex++, tmpSetenceStart))
+				{
+					m_HasNoTypeFeild = TRUE;
+					break;
+				}
             }
             //指向下一个语句的开始
             tmpSetenceStart = ++tmpPtrPos;
@@ -415,23 +434,27 @@ SQLiteTable::SQLiteTable(IN SQLiteTableCell * tableCell)
         //指向下一个字符
         tmpPtrPos++;
     }
-    //单独处理最后一句，因为它是以字符串结束符为结尾，跟上面的循环判断结尾','不同
-    if (IS_FOREIGN_KEY_SETENCE(tmpSetenceStart))
-    {
-        HandleForeignKeySetence(tmpSetenceStart);
-    }
-    else if (IS_CONSTRAINT_SETENCE(tmpSetenceStart))
-    {
-        HandlePrimaryKeySetence(tmpSetenceStart);
-    }
-    else if (IS_UNIQUE_SETENCE(tmpSetenceStart))
-    {
-        HandleUniqueKeySetence(tmpSetenceStart);
-    }
-    else
-    {
-        InitSqlFeild(feildsIndex++, tmpSetenceStart);
-    }
+	if (!m_HasNoTypeFeild)
+	{
+		//单独处理最后一句，因为它是以字符串结束符为结尾，跟上面的循环判断结尾','不同
+		if (IS_FOREIGN_KEY_SETENCE(tmpSetenceStart))
+		{
+			HandleForeignKeySetence(tmpSetenceStart);
+		}
+		else if (IS_CONSTRAINT_SETENCE(tmpSetenceStart))
+		{
+			HandlePrimaryKeySetence(tmpSetenceStart);
+		}
+		else if (IS_UNIQUE_SETENCE(tmpSetenceStart))
+		{
+			HandleUniqueKeySetence(tmpSetenceStart);
+		}
+		else
+		{
+			m_HasNoTypeFeild = !InitSqlFeild(feildsIndex++, tmpSetenceStart);
+		}
+	}
+    
 
     //////////////////////////////////////////////////////////////////////////
     //释放处理sql而申请的空间
@@ -567,4 +590,3 @@ BOOL SQLiteTable::GetFeildProperty(IN UINT index, IN int properties)
         (SFP_UNIQUE_KEY & properties && !m_Fields[index].IsUniqueKey)
         );
 }
-
