@@ -99,25 +99,35 @@ void SQLiteTable::FormatSql(IN_OUT char * sqlString)
 BOOL SQLiteTable::InitSqlFeild(IN int index, IN const char * feildSql)
 {
     int feildLen = strlen(feildSql) + 1;
+	//用于临时处理的存储sql语句
     char * sql = new char[feildLen];
     memcpy(sql, feildSql, feildLen);
+	//指向处理字段的开始
     char * tmpPosStartPtr = sql;
+	//指向处理字段的结束
     char * tmpPosEndPtr = *tmpPosStartPtr == '\'' ? strchr(tmpPosStartPtr + 1, '\'') + 1 : strchr(tmpPosStartPtr, ' ');
-	if (!tmpPosEndPtr)
+	//无类型字段直接释放掉然后返回false
+	if (!tmpPosEndPtr || (*(tmpPosEndPtr - 1) == '\'' && *tmpPosEndPtr != ' '))
 	{
 		delete[] sql;
 		//tmpPosEndPtr = sql + feildLen;
 		return FALSE;
 	}
+	//将字段名称后面改为结束符，方便后面处理
     *tmpPosEndPtr = 0;
     int len = strlen(tmpPosStartPtr) + 1;
+	//为字段名分配空间,并拷贝过去
     m_Fields[index].FieldName = new char[len];
     memcpy(m_Fields[index].FieldName, tmpPosStartPtr, len);
+	//起始指针指向下一段，即类型
     tmpPosStartPtr = tmpPosEndPtr + 1;
+	//这里查找')'，如果找到则说明是"varchar(10)"这种形式
     tmpPosEndPtr = strchr(tmpPosStartPtr, ')');
     if (tmpPosEndPtr == NULL)
     {
+		//没有找到的话，则说明不是上述形式，则查找空格
         tmpPosEndPtr = strchr(tmpPosStartPtr, ' ');
+		//找到空格说明数据末尾还有属性标志，则将空格改为结束符，方便处理属性
         if (tmpPosEndPtr)
         {
             *tmpPosEndPtr = 0;
@@ -125,15 +135,19 @@ BOOL SQLiteTable::InitSqlFeild(IN int index, IN const char * feildSql)
     }
     else
     {
+		//找到上述形式，则添加结束符
         tmpPosEndPtr++;
         *tmpPosEndPtr = 0;
     }
 
+	//计算类型字符串长度
     len = strlen(tmpPosStartPtr) + 1;
+	//为字符串类型分配空间，并拷贝进去
     m_Fields[index].TypeName = new char[len];
     memcpy(m_Fields[index].TypeName, tmpPosStartPtr, len);
-
+	//释放掉用于处理的sql
     delete[] sql;
+	//判断是否拥有指定属性并赋值
     m_Fields[index].NotNull = IS_NOT_NULL_FIELD(feildSql);
     m_Fields[index].IsPrimaryKey = IS_PRIMARY_KEY_FIELD(feildSql);
     m_Fields[index].IsAutoincrementKey = IS_AUTOINCREMENT_FIELD(feildSql);
@@ -172,7 +186,7 @@ int SQLiteTable::HandlePrimaryKeySetence(IN const char * setence)
         for (UINT i = 0; i < m_FieldCount; ++i)
         {
             if (!_strnicmp(m_Fields[i].FieldName, feildName, len) && !m_Fields[i].FieldName[len])
-            {
+            { 
                 m_Fields[i].IsPrimaryKey = TRUE;
                 count++;
                 break;

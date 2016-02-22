@@ -13,7 +13,7 @@ BOOL ProcTable(SQLiteTable * table, void * pVoid)
 
 BOOL ProcCell(SQLiteRecord * record, void * pVoid)
 {
-	cout << "Record count : " << record->GetFieldCount() << endl;
+	cout << "--Field count : " << record->GetFieldCount() << endl;
 	for (UINT i = 0; i < record->GetFieldCount(); ++i)
 	{
 		cout << record->GetFieldName(i) << "(" << record->GetFeildTypeName(i) << ") : ";
@@ -72,7 +72,8 @@ BOOL ProcCell(SQLiteRecord * record, void * pVoid)
 		}
 		cout << endl;
 	}
-	cout << "RowID : " << record->GetRowID() << endl;
+	cout << "--RowID : " << record->GetRowID() << endl;
+	cout << "================================" << endl;
 	return TRUE;
 }
 
@@ -103,13 +104,17 @@ int main()
 	cout << "info.GetMinorVersion() : " << info->GetMinorVersion() << endl;
 	cout << "info.GetReleaseNumber() : " << info->GetReleaseNumber() << endl;
 
-	cout << "------------------------------" << endl;
-
+	cout << "---------------TABLE---------------" << endl;
 	sqliteReader.QueryTable(ProcTable, NULL);
 
-	cout << "------------------------------" << endl;
+	cout << "---------------UserInfo---------------" << endl;
+	sqliteReader.QueryRecord("userinfo", ProcCell, NULL);
 
-	sqliteReader.QueryRecord("userInfo", ProcCell, NULL);
+	cout << "---------------Project---------------" << endl;
+	sqliteReader.QueryRecord("project", ProcCell, NULL);
+
+	cout << "---------------PerTendering---------------" << endl;
+	sqliteReader.QueryRecord("PerTendering", ProcCell, NULL);
 
 	getchar();
 	return 0;

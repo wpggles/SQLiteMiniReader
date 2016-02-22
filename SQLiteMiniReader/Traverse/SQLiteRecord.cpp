@@ -86,7 +86,16 @@ const char * SQLiteRecord::GetFeildTypeName(IN UINT index)
 ************************************************************************/
 SQLiteDataType SQLiteRecord::GetFeildSimilarType(IN UINT index)
 {
-    return m_SQLiteTable->GetSimilarType(index);
+	if (m_TmpDataCell)
+	{
+		if (m_TmpDataCell->GetTpye(index) == SDT_DBNULL && 
+			!m_SQLiteTable->GetFeildProperty(index, SFP_PRIMARY_KEY) &&
+			!m_SQLiteTable->GetFeildProperty(index, SFP_AUTOINCREMENT))
+		{
+			return SDT_DBNULL;
+		}
+	}
+	return m_SQLiteTable->GetSimilarType(index);
 }
 
 /************************************************************************
@@ -161,6 +170,10 @@ LONG SQLiteRecord::GetInteger(IN int index)
 ************************************************************************/
 double SQLiteRecord::GetReal(IN int index)
 {
+	if (m_TmpDataCell && m_TmpDataCell->GetTpye(index) == SDT_INTEGER)
+	{
+		return (double)m_TmpDataCell->GetInteger(index);
+	}
     return m_TmpDataCell ? m_TmpDataCell->GetReal(index) : 0;
 }
 
