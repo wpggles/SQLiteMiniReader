@@ -15,3 +15,8 @@ A mini reader of query(traverse) SQLite3 data from database file.
 
 ##注意
 - 因为像NULL这类的宏在SQLiteTools中重新定义，可能在部分编译器编译下出现警告。
+- 表名、字段名除非在建表语句中使用单引号引起来，否则全部转换为小写字符处理，在比较字段名时要注意。
+
+##修复BUG：  
+2016-04-21  
+[*]修复二进制数据（BLOB类型）读取的数据缺失，数据长度不正确的BUG。

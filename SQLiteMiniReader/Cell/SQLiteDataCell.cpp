@@ -173,7 +173,7 @@ UINT SQLiteDataCell::GetBLOB(IN int index, OUT BYTE * & bufferPtr)
         bufferPtr = NULL;
         return 0;
     }
-    UINT len = TEXT_LENGHT(m_Types[index]);
+    UINT len = BLOB_LENGHT(m_Types[index]);
     if (len == 0)
     {
         bufferPtr = NULL;

@@ -22,6 +22,7 @@ SQLiteMiniReader::SQLiteMiniReader(const char * dbFileName)
     m_DataLenght = (UINT)in.tellg();
     if (m_DataLenght <= 100)
     {
+        in.close();
         return;
     }
     m_Data = new BYTE[m_DataLenght];
