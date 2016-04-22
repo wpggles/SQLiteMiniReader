@@ -83,6 +83,13 @@
 //变长整数最大长度(字节)
 #define VOLATILE_NUMBER_MAX_LEN 9
 
+//针对不同平台统一函数
+#ifdef __linux
+#define _stricmp strcasecmp
+#define _strnicmp strncasecmp
+#endif // __linux
+
+
 class SQLiteTools
 {
 private:

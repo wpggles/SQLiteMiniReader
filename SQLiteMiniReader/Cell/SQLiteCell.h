@@ -25,7 +25,7 @@
 #define IS_VALOD_INDEX(x) ((x) >= 0 && (x) < (int)m_ColumnCount)
 
 //判断类型是为为DBNULL
-#define IS_DBNULL(x) (m_Types[x] == NULL)
+#define IS_DBNULL(x) (!m_Types[x])
 
 //SQLite表类型
 enum SQLiteTableType
