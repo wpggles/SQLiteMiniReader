@@ -18,5 +18,7 @@ A mini reader of query(traverse) SQLite3 data from database file.
 - 表名、字段名除非在建表语句中使用单引号引起来，否则全部转换为小写字符处理，在比较字段名时要注意。
 
 ##修复BUG：  
+2016-04-22  
+[*]修正因为Linux下与Windows下部分函数名不同造成的报错，以及NULL相关的警告。  
 2016-04-21  
 [*]修复二进制数据（BLOB类型）读取的数据缺失，数据长度不正确的BUG。
