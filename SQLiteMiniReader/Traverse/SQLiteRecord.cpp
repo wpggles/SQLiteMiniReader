@@ -88,9 +88,9 @@ SQLiteDataType SQLiteRecord::GetFeildSimilarType(IN UINT index)
 {
 	if (m_TmpDataCell)
 	{
-		if (m_TmpDataCell->GetTpye(index) == SDT_DBNULL && 
-			!m_SQLiteTable->GetFeildProperty(index, SFP_PRIMARY_KEY) &&
-			!m_SQLiteTable->GetFeildProperty(index, SFP_AUTOINCREMENT))
+		if (m_TmpDataCell->GetTpye(index) == SDT_DBNULL &&
+			!m_SQLiteTable->CheckFeildProperty(index, SFP_PRIMARY_KEY) &&
+			!m_SQLiteTable->CheckFeildProperty(index, SFP_AUTOINCREMENT))
 		{
 			return SDT_DBNULL;
 		}
@@ -99,16 +99,16 @@ SQLiteDataType SQLiteRecord::GetFeildSimilarType(IN UINT index)
 }
 
 /************************************************************************
-* 功能：获取指定字段的属性。
+* 功能：检查指定字段是否包含指定的属性。
 * 参数：
 *       index      [IN] -> 指定字段的索引。
 *       properties [IN] -> 要检查的属性(除SFP_NOP外可以使用'|'连接)。
 * 返回：指定的属性存在返回TRUE，只要有一个不存在就返回FALSE。
 * 注意：这里properties的属性传递SQLiteFeildProperty类型即可。
 ************************************************************************/
-BOOL SQLiteRecord::GetFeildProperty(IN UINT index, IN int properties)
+BOOL SQLiteRecord::CheckFeildProperty(IN UINT index, IN int properties)
 {
-    return m_SQLiteTable->GetFeildProperty(index, properties);
+    return m_SQLiteTable->CheckFeildProperty(index, properties);
 }
 
 /************************************************************************
@@ -148,8 +148,8 @@ LONG SQLiteRecord::GetInteger(IN int index)
         //因为SQLite为了节省空间，对于主键是自增的字段默认采用的是rowid
         if (!result)
         {
-            if (m_SQLiteTable->GetFeildProperty(index, SFP_PRIMARY_KEY) ||
-                m_SQLiteTable->GetFeildProperty(index, SFP_AUTOINCREMENT))
+            if (m_SQLiteTable->CheckFeildProperty(index, SFP_PRIMARY_KEY) ||
+                m_SQLiteTable->CheckFeildProperty(index, SFP_AUTOINCREMENT))
             {
                 return m_TmpDataCell->GetRowID();
             }

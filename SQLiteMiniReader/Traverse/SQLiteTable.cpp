@@ -186,7 +186,7 @@ int SQLiteTable::HandlePrimaryKeySetence(IN const char * setence)
         for (UINT i = 0; i < m_FieldCount; ++i)
         {
             if (!_strnicmp(m_Fields[i].FieldName, feildName, len) && !m_Fields[i].FieldName[len])
-            { 
+            {
                 m_Fields[i].IsPrimaryKey = TRUE;
                 count++;
                 break;
@@ -468,7 +468,7 @@ SQLiteTable::SQLiteTable(IN SQLiteTableCell * tableCell)
 			m_HasNoTypeFeild = !InitSqlFeild(feildsIndex++, tmpSetenceStart);
 		}
 	}
-    
+
 
     //////////////////////////////////////////////////////////////////////////
     //释放处理sql而申请的空间
@@ -587,14 +587,14 @@ SQLiteDataType SQLiteTable::GetSimilarType(IN UINT index)
 }
 
 /************************************************************************
-* 功能：获取指定字段的属性。
+* 功能：检查指定字段是否包含指定的属性。
 * 参数：
 *       index      [IN] -> 指定字段的索引。
 *       properties [IN] -> 要检查的属性(除SFP_NOP外可以使用'|'连接)。
 * 返回：指定的属性存在返回TRUE，只要有一个不存在就返回FALSE。
 * 注意：这里properties的属性传递SQLiteFeildProperty类型即可。
 ************************************************************************/
-BOOL SQLiteTable::GetFeildProperty(IN UINT index, IN int properties)
+BOOL SQLiteTable::CheckFeildProperty(IN UINT index, IN int properties)
 {
     return !((properties == SFP_NOP && (m_Fields[index].NotNull || m_Fields[index].IsPrimaryKey || m_Fields[index].IsAutoincrementKey || m_Fields[index].IsForeignKey)) ||
         (SFP_PRIMARY_KEY & properties && !m_Fields[index].IsPrimaryKey) ||

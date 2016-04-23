@@ -85,14 +85,14 @@ public:
     SQLiteDataType GetFeildSimilarType(IN UINT index);
 
     /************************************************************************
-    * 功能：获取指定字段的属性。
+    * 功能：检查指定字段是否包含指定的属性。
     * 参数：
     *       index      [IN] -> 指定字段的索引。
     *       properties [IN] -> 要检查的属性(除SFP_NOP外可以使用'|'连接)。
     * 返回：指定的属性存在返回TRUE，只要有一个不存在就返回FALSE。
     * 注意：这里properties的属性传递SQLiteFeildProperty类型即可。
     ************************************************************************/
-    BOOL GetFeildProperty(IN UINT index, IN int properties);
+    BOOL CheckFeildProperty(IN UINT index, IN int properties);
 
     /////////////////////////////////////////////////////////////////////////
 

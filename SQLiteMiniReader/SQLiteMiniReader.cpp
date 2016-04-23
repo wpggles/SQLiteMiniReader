@@ -55,7 +55,7 @@ SQLiteMiniReader::~SQLiteMiniReader()
 * 功能：获取数据库文件头信息。
 * 参数：无。
 * 返回：数据库文件头信息。
-* 备注：不要手动释放，SQLiteReader释放时会自动释放。
+* 备注：不要手动释放，SQLiteMiniReader释放时会自动释放。
 ************************************************************************/
 SQLiteFileHeader * SQLiteMiniReader::GetFileInfo()
 {
@@ -144,7 +144,7 @@ BOOL SQLiteMiniReader::TraverseCell(IN UINT pageIndex, IN HandleRecordCallback h
         //转换成叶子页对象处理
         SQLiteLeafPage * leafPage = (SQLiteLeafPage *)page;
         int count = leafPage->GetCellsCount();
-        
+
         for (int i = 0; i < count && continueTravers; ++i)
         {
             SQLiteDataCell * dataCell = (SQLiteDataCell *)leafPage->GetCell(i);
@@ -260,4 +260,122 @@ BOOL SQLiteMiniReader::TraverseTable(IN UINT pageIndex, IN HandleTableCallback h
 void SQLiteMiniReader::QueryTable(IN HandleTableCallback handleTableFunc, IN_OUT void * pVoid)
 {
 	TraverseTable(1, handleTableFunc, pVoid);
+}
+
+/************************************************************************
+* 功能：遍历指定表下的单元数量。
+* 参数：
+*       pageIndex [IN] -> 从第几页开始遍历。
+* 返回：单元的数量。
+************************************************************************/
+int SQLiteMiniReader::TraverseCellCount(IN UINT pageIndex)
+{
+    int cellCount = 0;
+    //创建页对象
+    SQLitePage * page = new SQLitePage(m_Data, m_SQLiteFileHeaderInfo->GetPageSize(), pageIndex);
+    //获取页类型，如果是叶子页则开始是查找数据
+    if (page->GetPageType() == SPT_LeafPage)
+    {
+        //转换成叶子页对象处理
+        SQLiteLeafPage * leafPage = (SQLiteLeafPage *)page;
+        cellCount = leafPage->GetCellsCount();
+    }
+    //如果是内部页则遍历当前内部页的页指针
+    else if (page->GetPageType() == SPT_InteriorPage)
+    {
+        SQLiteInteriorPage * interiorPage = (SQLiteInteriorPage *)page;
+        int count = interiorPage->GetPageCount();
+        for (int i = 0; i < count; ++i)
+        {
+            cellCount += TraverseCellCount(interiorPage->GetPageIndex(i));
+        }
+    }
+    delete page;
+    return cellCount;
+}
+
+/************************************************************************
+* 功能：遍历查询指定表下数据的数量。
+* 参数：
+*       tableName [IN] -> 要查询的表名。
+* 返回：数据的数量, -1说明没有此表或不支持此表。
+************************************************************************/
+int SQLiteMiniReader::QueryRecordCount(IN const char * tableName)
+{
+	int rootPageIndex = -1;
+    //从第1页开始查询指定的表
+    SQLiteTableCell * queryTableCell = FindTableCell(tableName, 1);
+    //查不到直接返回
+    if (queryTableCell)
+    {
+		//创建用于传参的对象
+		SQLiteRecord sqliteHandleCell(queryTableCell);
+		if (!sqliteHandleCell.m_SQLiteTable->HasNoTypeFeild())
+		{
+			rootPageIndex = TraverseCellCount((UINT)queryTableCell->GetRootPageIndex());
+		}
+    }
+    //删除表对象
+    delete queryTableCell;
+
+    return rootPageIndex;
+}
+
+/************************************************************************
+* 功能：遍历所有的表统计表的数量。
+* 参数：
+*       pageIndex [IN] -> 从第几页开始遍历。
+* 返回：表的数量。
+************************************************************************/
+int SQLiteMiniReader::TraverseTableCount(IN UINT pageIndex)
+{
+    int tableCount = 0;
+	//创建页对象
+	SQLitePage * page = new SQLitePage(m_Data, m_SQLiteFileHeaderInfo->GetPageSize(), pageIndex);
+	//获取页类型，如果是叶子页则开始是查找数据
+	if (page->GetPageType() == SPT_LeafPage)
+	{
+		//转换成叶子页对象处理
+		SQLiteLeafPage * leafPage = (SQLiteLeafPage *)page;
+		int count = leafPage->GetCellsCount();
+
+		for (int i = 0; i < count; ++i)
+		{
+			SQLiteTableCell * tableCell = (SQLiteTableCell *)leafPage->GetCell(i);
+
+			if (tableCell->GetTableType() == STT_Table)
+			{
+				SQLiteTable * table = new SQLiteTable(tableCell);
+				if (!table->HasNoTypeFeild())
+				{
+					tableCount++;
+				}
+				delete table;
+			}
+			delete tableCell;
+		}
+	}
+	//如果是内部页则遍历当前内部页的页指针
+	else if (page->GetPageType() == SPT_InteriorPage)
+	{
+		SQLiteInteriorPage * interiorPage = (SQLiteInteriorPage *)page;
+		int count = interiorPage->GetPageCount();
+		for (int i = 0; i < count; ++i)
+		{
+			tableCount += TraverseTableCount(interiorPage->GetPageIndex(i));
+		}
+	}
+	delete page;
+	return tableCount;
+}
+
+/************************************************************************
+* 功能：遍历查询数据库中表的数量。
+* 参数：无。
+* 返回：表的数量。
+* 备注：返回的数量是所能处理的表的数量，对于无类型等表直接忽略。
+************************************************************************/
+int SQLiteMiniReader::QueryTableCount()
+{
+    return TraverseTableCount(1);
 }

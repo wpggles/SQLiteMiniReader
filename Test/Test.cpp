@@ -105,15 +105,23 @@ int main()
 	cout << "info.GetReleaseNumber() : " << info->GetReleaseNumber() << endl;
 
 	cout << "---------------TABLE---------------" << endl;
+	cout << "Table Count : " << sqliteReader.QueryTableCount() << endl;
+	cout << "-----------------------------------" << endl;
 	sqliteReader.QueryTable(ProcTable, NULL);
 
 	cout << "---------------UserInfo---------------" << endl;
+	cout << "UserInfo Record Count : " << sqliteReader.QueryRecordCount("userinfo") << endl;
+	cout << "--------------------------------------" << endl;
 	sqliteReader.QueryRecord("userinfo", ProcCell, NULL);
 
 	cout << "---------------Project---------------" << endl;
+	cout << "Project Record Count : " << sqliteReader.QueryRecordCount("project") << endl;
+	cout << "-------------------------------------" << endl;
 	sqliteReader.QueryRecord("project", ProcCell, NULL);
 
 	cout << "---------------PerTendering---------------" << endl;
+	cout << "PerTendering Record Count : " << sqliteReader.QueryRecordCount("PerTendering") << endl;
+	cout << "------------------------------------------" << endl;
 	sqliteReader.QueryRecord("PerTendering", ProcCell, NULL);
 
 	getchar();
