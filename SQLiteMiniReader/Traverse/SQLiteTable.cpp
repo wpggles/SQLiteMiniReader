@@ -98,7 +98,7 @@ void SQLiteTable::FormatSql(IN_OUT char * sqlString)
 ************************************************************************/
 BOOL SQLiteTable::InitSqlFeild(IN int index, IN const char * feildSql)
 {
-    int feildLen = strlen(feildSql) + 1;
+    int feildLen = (int)strlen(feildSql) + 1;
 	//用于临时处理的存储sql语句
     char * sql = new char[feildLen];
     memcpy(sql, feildSql, feildLen);
@@ -115,7 +115,7 @@ BOOL SQLiteTable::InitSqlFeild(IN int index, IN const char * feildSql)
 	}
 	//将字段名称后面改为结束符，方便后面处理
     *tmpPosEndPtr = 0;
-    int len = strlen(tmpPosStartPtr) + 1;
+    int len = (int)strlen(tmpPosStartPtr) + 1;
 	//为字段名分配空间,并拷贝过去
     m_Fields[index].FieldName = new char[len];
     memcpy(m_Fields[index].FieldName, tmpPosStartPtr, len);
@@ -141,7 +141,7 @@ BOOL SQLiteTable::InitSqlFeild(IN int index, IN const char * feildSql)
     }
 
 	//计算类型字符串长度
-    len = strlen(tmpPosStartPtr) + 1;
+    len = (int)strlen(tmpPosStartPtr) + 1;
 	//为字符串类型分配空间，并拷贝进去
     m_Fields[index].TypeName = new char[len];
     memcpy(m_Fields[index].TypeName, tmpPosStartPtr, len);
@@ -181,7 +181,7 @@ int SQLiteTable::HandlePrimaryKeySetence(IN const char * setence)
             feildNameEnd = strchr(feildName, ')');
         }
         feildNameEnd -= 1;
-        int len = feildNameEnd - feildName + 1;
+        int len = (int)(feildNameEnd - feildName + 1);
 
         for (UINT i = 0; i < m_FieldCount; ++i)
         {
@@ -218,7 +218,7 @@ BOOL SQLiteTable::HandleForeignKeySetence(IN const char * setence)
     feildName += 1;
     feildNameEnd -= 1;
 
-    int len = feildNameEnd - feildName + 1;
+    int len = int(feildNameEnd - feildName + 1);
 
     for (UINT i = 0; i < m_FieldCount; ++i)
     {
@@ -257,7 +257,7 @@ BOOL SQLiteTable::HandleUniqueKeySetence(IN const char * setence)
             feildNameEnd = strchr(feildName, ')');
         }
         feildNameEnd -= 1;
-        int len = feildNameEnd - feildName + 1;
+        int len = int(feildNameEnd - feildName + 1);
 
         for (UINT i = 0; i < m_FieldCount; ++i)
         {
@@ -318,7 +318,7 @@ SQLiteTable::SQLiteTable(IN SQLiteTableCell * tableCell)
     }
 
     //计算字符串长度，从第一个'('之后开始
-    int tmpLen = strlen(tmpPtrPos + 1);
+    int tmpLen = (int)strlen(tmpPtrPos + 1);
 
     //为目标sql分配空间
     char * sql = new char[tmpLen];

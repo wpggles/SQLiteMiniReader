@@ -84,10 +84,10 @@
 #define VOLATILE_NUMBER_MAX_LEN 9
 
 //针对不同平台统一函数
-#ifdef __linux
+#if defined(__linux) || defined(__APPLE__)
 #define _stricmp strcasecmp
 #define _strnicmp strncasecmp
-#endif // __linux
+#endif
 
 
 class SQLiteTools
