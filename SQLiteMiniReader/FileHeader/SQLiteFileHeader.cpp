@@ -33,7 +33,7 @@ SQLiteFileHeader::SQLiteFileHeader(IN const BYTE * data)
     m_UserVersion = SQLiteTools::BigEndianInt(data + USER_VERSION_OFFSET);
     m_IncrementalVacuumMode = SQLiteTools::BigEndianInt(data + INCREMENTAL_VACUUM_MODE_OFFSET);
     m_ApplicationID = SQLiteTools::BigEndianInt(data + APPLICATION_ID_OFFSET);
-    m_VersionValidForNumber = SQLiteTools::BigEndianInt(data + VERSION_VALID_FOR_NNUMBER_OFFSET);
+    m_VersionValidForNumber = SQLiteTools::BigEndianInt(data + VERSION_VALID_FOR_NUMBER_OFFSET);
     m_SQLiteVersionNumber.Version = SQLiteTools::BigEndianInt(data + SQLITE_VERSION_NUMBER_OFFSET);
 
     SplitSQLiteVersionNumber(
@@ -205,7 +205,7 @@ UINT   SQLiteFileHeader::GetApplicationID()
 }
 
 /************************************************************************
-* 功能：获取数据库文件被修改次数。
+* 功能：获取数据库文件被修改次数(字段名称和实际数据有点不搭)。
 * 参数：无。
 * 返回：数据库文件被修改次数。
 ************************************************************************/

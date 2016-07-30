@@ -54,7 +54,7 @@
 //20字节保留数据偏移量
 #define RESERVED_FOR_EXPANSION_OFFSET    0x48
 //数据库文件被修改次数偏移量
-#define VERSION_VALID_FOR_NNUMBER_OFFSET 0x5C
+#define VERSION_VALID_FOR_NUMBER_OFFSET  0x5C
 //SQLite版本偏移量
 #define SQLITE_VERSION_NUMBER_OFFSET     0x60
 
@@ -244,7 +244,7 @@ public:
     UINT GetApplicationID();
 
     /************************************************************************
-    * 功能：获取数据库文件被修改次数。
+    * 功能：获取数据库文件被修改次数(字段名称和实际数据有点不搭)。
     * 参数：无。
     * 返回：数据库文件被修改次数。
     ************************************************************************/
