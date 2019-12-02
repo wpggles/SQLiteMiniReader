@@ -18,7 +18,7 @@ A mini reader of query(traverse) SQLite3 data from database file.
 - 表名、字段名除非在建表语句中使用单引号引起来，否则全部转换为小写字符处理，在比较字段名时要注意。
 
 ##修复BUG：
-- 2016-07-30
+- 2016-07-30  
   [*]更正VERSION_VALID_FOR_NUMBER_OFFSET宏名称，之前多了个字母N（强迫症 =_=!）。
 
 - 2016-04-25  
